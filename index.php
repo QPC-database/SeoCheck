@@ -8,6 +8,4 @@
 </html>
 
 <?php
-ini_set('user_agent', 'PxlSearchSpider');
-
 require_once('dbHandle.php');
