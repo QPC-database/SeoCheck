@@ -16,29 +16,15 @@ CREATE TABLE `siteslist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 INSERT INTO `siteslist` (`id`, `title`, `url`, `ga_code`, `IndexNeeded`) VALUES
-(1,	'Example Site',	'http://www.example.com',	'UA-XXXX-XXX',	1);");
-}
+(1,	'Example Site',	'http://www.example.com',	'UA-XXXX-XXX',	1);
 **/
 
 require 'class/controller.php';
 require 'class/robots.php';
-
-$servername = "localhost";
-$username = "username";
-$password = "password";
-$db = "SeoCheck";
+require 'dbConfig.php';
 
 define( 'WEBMASTER_EMAIL', 'your@email.here');
 
-//Open a new connection to the MySQL server
-$mysqli = new mysqli($servername, $username, $password, $db);
-
-//Output any connection error
-if ($mysqli->connect_error) {
-	die('Error : ('. $mysqli->connect_errno .') '. $mysqli->connect_error);
-}
-
-//MySqli Select Query
 $results = $mysqli->query('SELECT * FROM sitesList');
 
 $controller = new Controller();
@@ -47,8 +33,8 @@ while( $row = $results->fetch_object() ) {
 
 	$robot = new Robots( $row->url );
 	$crawlable = $robot->isOkToCrawl( '/' );
-	echo $row->url;
-	var_dump( $crawlable );
+	// echo $row->url;
+	// var_dump( $crawlable );
 
 
 	$indexNeededConv = $controller->strtoboo( $row->indexNeeded );
@@ -56,7 +42,7 @@ while( $row = $results->fetch_object() ) {
 	$ga = $controller->getAnalytics( $row->url);
 
 	$indexError = $controller->indexError( $indexNeededConv, $crawlable );
-	var_dump($indexError);
+	// var_dump($indexError);
 	$gaCheck = $controller->checkGA( $row, $ga );
 
 	if( !$gaCheck || $indexError) {
@@ -66,7 +52,7 @@ while( $row = $results->fetch_object() ) {
 
 function send_final_email( $row, $ga,  $gaCheck, $indexError ) {
 	$dbGa = strtolower( $row->ga_code );
-	var_dump($indexError);
+	// var_dump($indexError);
 	$to      = WEBMASTER_EMAIL;
 	if( $indexError && !$gaCheck ) {
 
@@ -93,7 +79,7 @@ function send_final_email( $row, $ga,  $gaCheck, $indexError ) {
 	$message = "<html><body>";
 
 	if( isset($message1) )
-		$message .= $message1;	
+		$message .= $message1;
 
 	$message .= "<h3>Please check immediately</h3>";
 	$message .= "<table rules='all' style='width: 100%;border-color: #666;'' cellpadding='10'>";
@@ -112,11 +98,11 @@ function send_final_email( $row, $ga,  $gaCheck, $indexError ) {
 	$headers .= "Content-type: text/html; charset=iso-8859-1" . "\r\n";
 
 	if( mail($to, $subject, $message, $headers) ) {
-		echo "Sent";
+		// echo "Sent";
 	} else {
-		echo "Error";
+		// echo "Error";
 	}
 }
 
-// close connection 
+// close connection
 $mysqli->close();
