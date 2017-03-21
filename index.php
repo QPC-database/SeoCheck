@@ -8,4 +8,4 @@
 </html>
 
 <?php
-require_once('dbHandle.php');
+require_once('init.php');

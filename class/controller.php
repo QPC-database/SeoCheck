@@ -37,17 +37,23 @@ class Controller
 	}
 
 	public function indexError( $indexNeeded, $crawlable ) {
-		var_dump($indexNeeded);
-		var_dump($crawlable);
 		if( $indexNeeded ) {
 			if( !$crawlable ) {
-				return "<b style='color: red'>not indexable when it should be!</b>";
+				if( HTML_EMAIL ) {
+					return "<b style='color: red'>not indexable when it should be!</b>";
+				} else {
+					return "not indexable when it should be!";
+				}
 			} else {
 				return false;
 			}
 		} elseif( !$indexNeeded ) {
 			if( $crawlable ) {
-				return "<b style='color: red'>indexable when it shouldn't be!</b>";
+				if( HTML_EMAIL ) {
+					return "<b style='color: red'>indexable when it shouldn't be!</b>";
+				} else {
+					return "indexable when it shouldn't be!";
+				}
 			} else {
 				return false;
 			}
