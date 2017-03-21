@@ -3,18 +3,18 @@ class Controller
 {
 
 	/*
-	* 
+	*
 	*	Converts strings to booleans for ease of handling
-	* 
+	*
 	*/
 	public function strtoboo($str) {
 		return filter_var( $str, FILTER_VALIDATE_BOOLEAN);
 	}
 
 	/*
-	* 
+	*
 	*	Regex strips the ga code from the sites source code
-	* 
+	*
 	*/
 	public function getAnalytics($str){
 		$source = file_get_contents($str);
@@ -23,14 +23,14 @@ class Controller
 	}
 
 	/*
-	* 
+	*
 	*	Compares the sites GA code to the DB GA code
-	* 
+	*
 	*/
 	public function checkGA($row, $ga) {
 		$dbGa = strtolower($row->ga_code);
 		if($ga !== $dbGa) {
-			return false; 
+			return false;
 		} else {
 			return true;
 		}
