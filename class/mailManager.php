@@ -2,7 +2,7 @@
 
 class MailManager {
 
-	public function send_final_email_html( $row, $ga,  $gaCheck, $indexError ) {
+	public function send_email_html( $row, $ga,  $gaCheck, $indexError ) {
 		$dbGa = strtolower( $row->ga_code );
 		$to = WEBMASTER_EMAIL;
 
@@ -54,7 +54,7 @@ class MailManager {
 		mail($to, $subject, $message, $headers);
 	}
 
-	public function send_final_email_plain( $row, $ga,  $gaCheck, $indexError ) {
+	public function send_email_plain( $row, $ga,  $gaCheck, $indexError ) {
 		$dbGa = strtolower( $row->ga_code );
 		$to = WEBMASTER_EMAIL;
 

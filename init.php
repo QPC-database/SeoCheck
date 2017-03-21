@@ -7,10 +7,11 @@ require 'class/dbController.php';
 
 $controller = new Controller();
 $database = new DbController();
-
+$mm = new MailManager();
 $rows = $database->get_field();
+
 foreach ( $rows as $result ) {
-	
+
 	//Checks to take place on each row of the database
 	$robot = new Robots( $result->url );
 	$crawlable = $robot->isOkToCrawl( '/' );
@@ -23,9 +24,10 @@ foreach ( $rows as $result ) {
 	// send an email with errors in
 	if( !$gaCheck || $indexError) {
 		if( HTML_EMAIL ) {
-			send_email_html( $row, $ga, $gaCheck, $indexError );
+			$mm->send_email_html( $result, $ga, $gaCheck, $indexError );
 		} else {
-			send_email_plain( $row, $ga, $gaCheck, $indexError );
+			$mm->send_email_plain( $result, $ga, $gaCheck, $indexError );
 		}
 	}
+	
 }
