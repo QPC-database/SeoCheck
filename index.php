@@ -1,7 +1,6 @@
 <?php
-require_once('init.php');
+	require 'init.php';
 ?>
-
 <!DOCTYPE html>
 <html>
 	<head>
@@ -49,7 +48,7 @@ require_once('init.php');
 									<td><?php echo $row->title; ?></td>
 									<td><a href="<?php echo $row->url; ?>"><?php echo $row->url; ?></a></td>
 									<td><?php echo $row->ga_code; ?></td>
-									<td><?php echo $row->indexNeeded; ?></td>
+									<td><?php echo ( $row->indexNeeded ) ? "Yes" : "No" ?></td>
 								</tr>
 							<?php } ?>
 						<?php } ?>
