@@ -30,23 +30,19 @@ if( !file_exists( __DIR__ . '/config/.dbConfig' ) ) {
 				$gaPrev = $controller->strtoboo( $result->gaPreviousState );
 				$indexPrev = $controller->strtoboo( $result->indexPreviousState );
 
-				if( !$gaCheck ) {
-					if( !$gaCheck !== $gaPrev) {
-						$database->runQuery( "UPDATE {$prefix}siteslist SET gaPreviousState = 1" );
-					}
-				} else {
-					if( !$gaCheck !== $gaPrev) {
-						$database->runQuery( "UPDATE {$prefix}siteslist SET gaPreviousState = 0" );
+				if( !$gaCheck !== $gaPrev) {
+					if( !$gaCheck ){
+						$database->runQuery( "UPDATE {$prefix}siteslist SET gaPreviousState = 1 WHERE id = $result->id" );
+					} else {
+						$database->runQuery( "UPDATE {$prefix}siteslist SET gaPreviousState = 0 WHERE id = $result->id" );
 					}
 				}
 
-				if( $indexError ) {
-					if( $indexError !== $gaPrev) {
-						$database->runQuery( "UPDATE {$prefix}siteslist SET indexPreviousState = 1" );
-					}
-				} else {
-					if( $indexError !== $gaPrev) {
-						$database->runQuery( "UPDATE {$prefix}siteslist SET indexPreviousState = 0" );
+				if( $indexError !== $indexPrev) {
+					if( $indexError ){
+						$database->runQuery( "UPDATE {$prefix}siteslist SET indexPreviousState = 1 WHERE id = $result->id" );
+					} else {
+						$database->runQuery( "UPDATE {$prefix}siteslist SET indexPreviousState = 0 WHERE id = $result->id" );
 					}
 				}
 

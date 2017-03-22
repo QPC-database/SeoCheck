@@ -44,7 +44,7 @@ require_once('init.php');
 					<tbody>
 						<?php if( $rows = $database->get_field()) { ?>
 							<?php foreach( $rows as $row ) { ?>
-								<tr <?php echo ($row->gaPreviousState || $rowindexPreviousState) ? "class='bg-danger'" : " " ?>>
+								<tr <?php echo ($row->gaPreviousState || $row->indexPreviousState) ? "class='bg-danger'" : " " ?>>
 									<td><?php echo $row->id; ?></td>
 									<td><?php echo $row->title; ?></td>
 									<td><a href="<?php echo $row->url; ?>"><?php echo $row->url; ?></a></td>
