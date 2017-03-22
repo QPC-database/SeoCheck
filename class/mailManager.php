@@ -4,7 +4,7 @@ class MailManager {
 
 	public function send_email_html( $row, $ga,  $gaCheck, $indexError ) {
 		$dbGa = strtolower( $row->ga_code );
-		$to = WEBMASTER_EMAIL;
+		$to = NOTIFY_EMAIL;
 
 		//Begin the configure route to populate email correctly
 		if( $indexError && !$gaCheck ) {
@@ -56,38 +56,38 @@ class MailManager {
 
 	public function send_email_plain( $row, $ga,  $gaCheck, $indexError ) {
 		$dbGa = strtolower( $row->ga_code );
-		$to = WEBMASTER_EMAIL;
+		$to = NOTIFY_EMAIL;
 
 		//Begin the configure route to populate email correctly
 		if( $indexError && !$gaCheck ) {
 			// If both the GA code and robots crawl don't match requirements
 			$subject = "GA AND ROBOTS WARNING" . "\r\n";
-			$message1 = "The following analytics code do not match and the site is $indexError" . "\r\n";
-			$message2 = "Site GA Code: $ga" . "\r\n";
-			$message3 = "Database GA Code: $dbGa" . "\r\n";
+			$message1 = "The following analytics code do not match and the site is $indexError\r\n\r\n";
+			$message2 = "Site GA Code: $ga\r\n\r\n";
+			$message3 = "Database GA Code: $dbGa\r\n";
 
 		} elseif( !$gaCheck ) {
 			// If the GA code doesn't match the storved value
-			$subject = "GA CODE WARNING" . "\r\n";
-			$message1 = "The following details do not match the saved values!" . "\r\n";
-			$message2 = "Site GA Code: $ga" . "\r\n";
-			$message3 = "Database GA Code: $dbGa" . "\r\n";
+			$subject = "GA CODE WARNING";
+			$message1 = "The following details do not match the saved values!\r\n\r\n";
+			$message2 = "Site GA Code: $ga\r\n\r\n";
+			$message3 = "Database GA Code: $dbGa\r\n";
 
 		} elseif( $indexError ) {
 			//If the Robots crawl state doesn't match requirements
-			$subject = "ROBOTS WARNING" . "\r\n";
-			$message1 = "The following site is $indexError" . "\r\n";
-			$message2 = "Index Error: Yes" . "\r\n";
+			$subject = "ROBOTS WARNING";
+			$message1 = "The following site is $indexError\r\n\r\n";
+			$message2 = "Index Error: Yes\r\n";
 
 		}
 
 		//Begin formatting actual message to send
-		$message = 'Please check the following.';
+		$message = "Please check the following.\r\n\r\n";
 		if( isset($message1) )
 			$message .= $message1;	
 
-		$message .= "Name: $row->title";
-		$message .= "Site url: $row->url";
+		$message .= "Name: $row->title\r\n\r\n";
+		$message .= "Site url: $row->url\r\n\r\n";
 
 		if( isset($message2) )
 			$message .= $message2;
@@ -95,7 +95,7 @@ class MailManager {
 		if( isset($message3) )
 			$message .= $message3;
 
-		$headers .= "Content-type: text/plain;" . "\r\n";
+		$headers = "Content-Type: text/plain; charset=utf-8";
 
 		mail($to, $subject, $message, $headers);
 	}

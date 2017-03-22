@@ -8,5 +8,5 @@ define( 'DB_NAME', 'seocheck' );
 define( 'PREFIX', 'sc_' );
 
 // Email settings
-define( 'WEBMASTER_EMAIL', 'your@email.here' );
+define( 'NOTIFY_EMAIL', 'your@email.here' );
 define( 'HTML_EMAIL', true );
