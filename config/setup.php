@@ -21,7 +21,7 @@ function createsitesListTable( $conn ) {
 		PRIMARY KEY (`id`)
 	) ENGINE=InnoDB DEFAULT CHARSET=latin1;" );
 
-	$exampleData = $conn->runQuery( "INSERT INTO `sc_siteslist` (
+	$exampleData = $conn->runQuery( "INSERT INTO `{$table_prefix}_siteslist` (
 		`title`, 
 		`url`, 
 		`ga_code`, 
