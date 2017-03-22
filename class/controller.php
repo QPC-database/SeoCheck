@@ -2,24 +2,40 @@
 class Controller
 {
 
+	public function is_404( $url ) {
+		$headers = get_headers( $url, 1 );
+
+		preg_match( '/[0-9]{3}/i', $headers[0], $matches );
+		$errorCode = $matches[0];
+		if( $errorCode == '404' ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	/*
 	*
 	*	Converts strings to booleans for ease of handling
 	*
 	*/
-	public function strtoboo($str) {
+	public function strtoboo( $str ) {
 		return filter_var( $str, FILTER_VALIDATE_BOOLEAN);
 	}
+
 
 	/*
 	*
 	*	Regex strips the ga code from the sites source code
 	*
 	*/
-	public function getAnalytics($str){
+	public function getAnalytics( $str ){
 		$source = file_get_contents($str);
-		$regex = preg_match('/ua-[0-9]{5,}-[0-9]{1,}/i', $source, $matches);
-		return strtolower($matches[0]);
+		preg_match('/ua-[0-9]{5,}-[0-9]{1,}/i', $source, $matches);
+		if( sizeof($matches) > 0 ) {
+			return strtolower( $matches[0] );
+		}
+		return false;
 	}
 
 	/*
@@ -27,7 +43,7 @@ class Controller
 	*	Compares the sites GA code to the DB GA code
 	*
 	*/
-	public function checkGA($row, $ga) {
+	public function checkGA( $row, $ga ) {
 		$dbGa = strtolower($row->ga_code);
 		if($ga !== $dbGa) {
 			return false;

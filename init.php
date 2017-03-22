@@ -5,29 +5,62 @@ require 'class/robots.php';
 require 'class/mailManager.php';
 require 'class/dbController.php';
 
-$controller = new Controller();
 $database = new DbController();
-$mm = new MailManager();
-$rows = $database->get_field();
 
-foreach ( $rows as $result ) {
+if( !file_exists( __DIR__ . '/config/.dbConfig' ) ) {
+	require 'config/setup.php';
+	createTables( $database );
+} else {
 
-	//Checks to take place on each row of the database
-	$robot = new Robots( $result->url );
-	$crawlable = $robot->isOkToCrawl( '/' );
-	$indexNeededConv = $controller->strtoboo( $result->indexNeeded );
-	$ga = $controller->getAnalytics( $result->url );
-	$indexError = $controller->indexError( $indexNeededConv, $crawlable );
-	$gaCheck = $controller->checkGA( $result, $ga );
+	$controller = new Controller();
+	$mm = new MailManager();
+	$rows = $database->get_field();
+	$prefix = constant( 'PREFIX' );
+	if( $rows ) {
+		foreach ( $rows as $result ) {
+			if( $controller->is_404($result->url) ) {
+				return false;
+			} else {
+				//Checks to take place on each row of the database
+				$robot = new Robots( $result->url );
+				$crawlable = $robot->isOkToCrawl( '/' );
+				$ga = $controller->getAnalytics( $result->url );
+				$indexError = $controller->indexError(  $controller->strtoboo( $result->indexNeeded ), $crawlable );
+				$gaCheck = $controller->checkGA( $result, $ga );
+				$gaPrev = $controller->strtoboo( $result->gaPreviousState );
+				$indexPrev = $controller->strtoboo( $result->indexPreviousState );
 
-	// If either of the critera are throwing an error
-	// send an email with errors in
-	if( !$gaCheck || $indexError) {
-		if( HTML_EMAIL ) {
-			$mm->send_email_html( $result, $ga, $gaCheck, $indexError );
-		} else {
-			$mm->send_email_plain( $result, $ga, $gaCheck, $indexError );
+				if( !$gaCheck ) {
+					if( !$gaCheck !== $gaPrev) {
+						$database->runQuery( "UPDATE {$prefix}siteslist SET gaPreviousState = 1" );
+					}
+				} else {
+					if( !$gaCheck !== $gaPrev) {
+						$database->runQuery( "UPDATE {$prefix}siteslist SET gaPreviousState = 0" );
+					}
+				}
+
+				if( $indexError ) {
+					if( $indexError !== $gaPrev) {
+						$database->runQuery( "UPDATE {$prefix}siteslist SET indexPreviousState = 1" );
+					}
+				} else {
+					if( $indexError !== $gaPrev) {
+						$database->runQuery( "UPDATE {$prefix}siteslist SET indexPreviousState = 0" );
+					}
+				}
+
+				// If either of the critera are throwing an error
+				// send an email with errors in
+				if( !$gaCheck || $indexError) {
+					if( HTML_EMAIL ) {
+						$mm->send_email_html( $result, $ga, $gaCheck, $indexError );
+					} else {
+						$mm->send_email_plain( $result, $ga, $gaCheck, $indexError );
+					}
+				}
+			}
+			
 		}
 	}
-	
 }

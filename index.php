@@ -7,6 +7,7 @@ require_once('init.php');
 	<head>
 		<title>SEO Check</title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+		<link rel="stylesheet" type="text/css" href="style.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 	</head>
 	<body>
@@ -22,7 +23,7 @@ require_once('init.php');
 			        <a class="nav-link active" href="/">Home</a>
 			      </li>
 						<li class="nav-item">
-			        <a class="nav-link" href="/">Settings</a>
+			        <a class="nav-link" href="/settings">Settings</a>
 			      </li>
 			    </ul>
 			  </div>
@@ -41,14 +42,16 @@ require_once('init.php');
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach( $database->get_field() as $row ) { ?>
-							<tr>
-								<td><?php echo $row->id; ?></td>
-								<td><?php echo $row->title; ?></td>
-								<td><a href="<?php echo $row->url; ?>"><?php echo $row->url; ?></a></td>
-								<td><?php echo $row->ga_code; ?></td>
-								<td><?php echo $row->indexNeeded; ?></td>
-							</tr>
+						<?php if( $rows = $database->get_field()) { ?>
+							<?php foreach( $rows as $row ) { ?>
+								<tr <?php echo ($row->gaPreviousState || $rowindexPreviousState) ? "class='bg-danger'" : " " ?>>
+									<td><?php echo $row->id; ?></td>
+									<td><?php echo $row->title; ?></td>
+									<td><a href="<?php echo $row->url; ?>"><?php echo $row->url; ?></a></td>
+									<td><?php echo $row->ga_code; ?></td>
+									<td><?php echo $row->indexNeeded; ?></td>
+								</tr>
+							<?php } ?>
 						<?php } ?>
 					</tbody>
 				</table>

@@ -21,17 +21,26 @@ class DbController {
 
 	public function runQuery( $query ) {
 		$connection = $this->connect();
-		return $connection->query( $query );
+		if( !$queried = $connection->query( $query ) ) {
+			$error = "SQL Error: $connection->error\n";
+			return $error;
+		} 
+		return $queried;
 	}
 
 	// Get field function to get a database field
 	public function get_field( $fieldName = '*', $table = 'sitesList') {
-		$result = [];
-		$results = $this->runQuery( "SELECT $fieldName FROM ". constant( 'PREFIX' ) . "$table" );
-		while( $rows = $results->fetch_object() ) {
-			array_push( $result, $rows );
+		$prefix = constant('PREFIX');
+		$resultArray = [];
+		$results = $this->runQuery( "SELECT $fieldName FROM {$prefix}$table" );
+		if( $results ) {
+			while( $rows = $results->fetch_object() ) {
+				array_push( $resultArray, $rows );
+			}
+			return $resultArray;
+		} else {
+			return false;
 		}
-		return $result;
 	}
 
 }

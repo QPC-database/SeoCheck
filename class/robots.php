@@ -84,9 +84,15 @@ class Robots
      * @throws \RuntimeException
      */
     protected function _fetchRobotsTxt()
-    {
+    {   
+        $controller = new Controller();
     	$parsed = parse_url($this->site);
-        return file_get_contents( $parsed['scheme']. '://' . $parsed['host'] . '/robots.txt');
+        if( $controller->is_404( $parsed['scheme']. '://' . $parsed['host'] . '/robots.txt' ) ) {
+            return false;        
+        } else {
+            return file_get_contents( $parsed['scheme']. '://' . $parsed['host'] . '/robots.txt');
+        }
+        
     }
 
     /**
