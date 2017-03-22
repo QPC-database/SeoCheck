@@ -3,8 +3,13 @@
 if( empty( $_POST ) ) {
 	return;
 } else {
+	$get = $_GET;
 	$post = $_POST;
 	$cron = $post['cron'];
+}
+
+if (is_null($cron)) {
+	$cron = $get['cron'];
 }
 
 if( $cron == 'auto' ) {
@@ -65,11 +70,11 @@ if( $cron == 'auto' ) {
 						}
 					}
 				}
-				
+
 			}
 		}
 	}
-} elseif( $cron = 'addSite' ) {
+} elseif( $cron == 'addSite' ) {
 	require 'config/config.php';
 	require 'class/dbController.php';
 
@@ -85,9 +90,9 @@ if( $cron == 'auto' ) {
 		$indexStatus = 0;
 	}
 	$conn->runQuery( "INSERT INTO `{$prefix}siteslist` (
-		`title`, 
-		`url`, 
-		`ga_code`, 
+		`title`,
+		`url`,
+		`ga_code`,
 		`indexNeeded`
 		) VALUES ('$siteName', '$siteUrl', '$siteGa', '$indexStatus');" );
 	die();

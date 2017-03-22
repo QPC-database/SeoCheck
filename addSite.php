@@ -4,7 +4,7 @@ include_once( 'header.php' );
 <div class="container">
 	<div class="row">
 		<div class="offset-2 col-md-8">
-			<form method="post" action="tasks.php">
+			<form method="post" action="tasks.php" id="add-site-form">
 				<input type="hidden" name="cron" value="addSite">
 				<div class="row">
 					<div class="col-lg-6 col-xs-12">
