@@ -1,5 +1,4 @@
 <?php
-
 if( empty( $_POST ) ) {
 	return;
 } else {
@@ -67,6 +66,9 @@ if( $cron == 'auto' ) {
 							$mm->send_email_html( $result, $ga, $gaCheck, $indexError );
 						} else {
 							$mm->send_email_plain( $result, $ga, $gaCheck, $indexError );
+						}
+						if( NOTIFY_SLACK ) {
+							$mm->send_slack_msg( $result, $ga, $gaCheck, $indexError );
 						}
 					}
 				}
